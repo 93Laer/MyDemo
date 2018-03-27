@@ -7,9 +7,21 @@
  * 描述：
  */
 import React from 'react';
-import { View, Text,Button } from 'react-native';
+import { StyleSheet,View, Text,Button } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 class HomeScreen  extends React.Component {
+    //设置顶部导航栏的内容
+    static navigationOptions = ({navigation, screenProps}) => ({
+        //标题
+        headerTitle: '主页面',
+        //设置跳转页面左侧返回箭头后面的文字，默认是上一个页面的标题
+        headerBackTitle: null,
+        //顶部标题栏的样式
+        headerStyle: styles.headerStyle,
+        //顶部标题栏文字的样式
+        headerTitleStyle: styles.headerTitleStyle,
+    });
+
     render() {
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -17,25 +29,37 @@ class HomeScreen  extends React.Component {
                 <Button
                     title="Go to Details"
                     //这里跳转的页面是我们已经在StackNavigator中注册了的，如果是没注册又会发生什么呢
-                    onPress={() => this.props.navigation.navigate('Details')}
+                    onPress={() => this.props.navigation.navigate('Details',{title:'这是主界面传递的title'})}
                     />
             </View>
         )
     }
 }
 class DetailsScreen  extends React.Component {
+    //设置顶部导航栏的内容
+    static navigationOptions = ({navigation, screenProps}) => ({
+        //标题
+        headerTitle: navigation.state.params.title,
+        //设置跳转页面左侧返回箭头后面的文字，默认是上一个页面的标题
+        headerBackTitle: null,
+        //顶部标题栏的样式
+        headerStyle: styles.headerStyle,
+        //顶部标题栏文字的样式
+        headerTitleStyle: styles.headerTitleStyle,
+    });
+
     render() {
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <Text>Details Screen</Text>
+                <Text>{this.props.navigation.state.params.title}</Text>
                 <Button
                     title="Go to Details again"
                     //这里跳转的页面是我们已经在StackNavigator中注册了的，如果是没注册又会发生什么呢
-                    onPress={() => this.props.navigation.navigate('Details')}
+                    onPress={() => this.props.navigation.navigate('Details',{title:'再一次跳转详情页'})}
                     />
                 <Button
                     title="Go back"
-                    onPress={() => this.props.navigation.goBack('Home')}
+                    onPress={() => this.props.navigation.goBack()}
                     />
             </View>
         );
@@ -58,5 +82,17 @@ export default StackNavigator({
         //通过initialRouteName来控制初始化哪一个路由
         initialRouteName: 'Home',
     }
-
 );
+const styles = StyleSheet.create({
+    headerStyle: {
+        backgroundColor: '#4398ff',
+    },
+    headerTitleStyle: {
+        //标题的文字颜色
+        color: 'white',
+        //设置标题的大小
+        fontSize: 18,
+        //居中显示
+        alignSelf: 'center',
+    },
+});
